@@ -9,16 +9,22 @@
 #include <algorithm>
 using namespace std;
 /**
- * 方法：双指针法
- * 左右两个指针向中间缩，调用swap函数交换一下
+ * 看题想法：不分配额外数组空间首先就得想到双指针，然后数组整体反转可以前后
+ * 各一个指针，两个指针所指的值边向中间移动边互换，两指针重合结束循环
  * 
+ * 想法对了，直接通过了。
  */
 class Solution {
 public:
     void reverseString(vector<char>& s) {
         int size = s.size();
-        for (int i = 0, j = size - 1; i < size / 2; ++i, --j) {
-            swap(s[i],s[j]); //swap就是开辟个中间变量那种交换
+        int left = 0, right = size - 1;
+
+        while (left < right) {
+            swap(s[left], s[right]);
+
+            ++left;
+            --right;
         }
     }
 };
