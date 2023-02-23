@@ -7,69 +7,52 @@
 // @lc code=start
 /**
  * Definition for singly-linked list.
-  struct ListNode {
-      int val;
-      ListNode *next;
-      ListNode() : val(0), next(nullptr) {}
-      ListNode(int x) : val(x), next(nullptr) {}
-      ListNode(int x, ListNode *next) : val(x), next(next) {}
-  };
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
  */
-/**
- * 方法一：暴力解法
- * 先得到链表的size，再找到正数第（size-n）个节点，这个是倒数第
- * n个节点前边一个节点，然后先把要删除的节点记录，next跨过这个节点
- * 最后删除内存，返回头节点
- * 
- * 方法二：巧妙双指针法
- * 因为涉及到删除头节点的问题，所以需要new一个虚拟头节点
- * 定义快慢指针都指向虚拟头节点，快指针先走n步，然后快慢指针
- * 保持这个距离已知向后遍历，直到快指针指向null，后来发现
- * 删除节点需要找到前一个节点，所以需要快指针先走n+1步
-*/
-
 // struct ListNode
 // {
 //     int val;
 //     ListNode *next;
-//     ListNode() : val(0), next(nullptr) {}
-//     ListNode(int x) : val(x), next(nullptr) {}
-//     ListNode(int x, ListNode *next) : val(x), next(next) {}
+//     ListNode() : val(0), next(nullptr) {} 
+//     ListNode(int x) : val(x), next(nullptr) {} 
+//     ListNode(int x, ListNode *next) : val(x), next(next) {}                                                                                                                                
 // };
+/**
+ * 思路：正常找倒数第n个节点需要先遍历到尾节点，记录一下节点
+ * 个数，然后再去删除节点数-n个节点。
+ * 删除节点需要找到要删除节点的前一个结点，前一个结点直接指向
+ * 当前节点的下一个节点就删除了当前节点。
+ * 但是如果只扫描一次链表的话就需要使用双指针了，一个指针先走
+ * n步第二个指针才开始走，两个指针一起同步走，第一个指针走到
+ * 结尾的时候第二个指针正好走到倒数第n个节点，但是由于需要找
+ * 到删除节点的前一个节点，所以需要第一个节点先走n+1步。
+ * 
+ */
 class Solution {
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        // //方法一
-        // ListNode *dummyhead = new ListNode(0,head);
-        // ListNode *cur1 = head;
-        // ListNode *cur2 = dummyhead;
-        // int size = 0;
-        // while (cur1) {
-        //     cur1 = cur1->next;
-        //     ++size;
-        // }
-        // int forwardNum = size - n;
-        // while (forwardNum--) cur2 = cur2->next;
-        // ListNode *temp = cur2->next;
-        // cur2->next = cur2->next->next;
-        // delete temp;
-        // return dummyhead->next;
-        //方法二：双指针
-        ListNode *dummyhead = new ListNode(0, head);
-        ListNode *fast = dummyhead;
-        ListNode *slow = dummyhead;
-        n++; //快指针多走一步
-        while (n-- ) { //不用限制fast，因为n不能超过size-1
+        ListNode *dummy_head = new ListNode(0, head);
+        ListNode *fast = dummy_head;
+        ListNode *slow = dummy_head;
+        ++n;
+        while (n-- && fast != nullptr) {
             fast = fast->next;
         }
-        while (fast) {
+        while (fast != nullptr) {
             fast = fast->next;
             slow = slow->next;
         }
-        ListNode *temp = slow->next;
+        ListNode *tmp = slow->next;
         slow->next = slow->next->next;
-        delete temp;
-        return dummyhead->next;          
+        delete tmp;
+        return dummy_head->next;
+        
     }
 };
 // @lc code=end

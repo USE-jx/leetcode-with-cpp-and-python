@@ -1,68 +1,53 @@
-/*
- * @lc app=leetcode.cn id=206 lang=cpp
+// @before-stub-for-debug-begin
+#include <vector>
+#include <string>
+
+using namespace std;
+// @before-stub-for-debug-end
+
+struct ListNode
+{
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+/**
+ * 思路：主要是从前向后遍历，操作next指针。
+ * 但是链表的主要难点是改变next之后，原来的next节点就找不到了，所以
+ * 需要提前存一下。
+ * 前后两个节点一起向后移动。
+ * 链表返回头指针不相当于返回一整个链表，leetcode是用头指针把链表遍历了一遍
  *
- * [206] 反转链表
  */
-
-// @lc code=start
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
-/**
- * 方法1：双指针法
- * 用两个指针pre和cur分别指向当前节点前一个节点和当前节点，
- * 两个指针挨着向后遍历链表，当cur=null时停止，
- * 在反转之前需要先记录一下cur.next，否则cur指向pre后，cur就没法后移了，
- * 然后先pre=cur，再cur=temp
- * 方法2：递归
- * 按照双指针的实现思路用递归的形式写出代码
- * 因为本次需要不断更新pre和cur，所以两个参数设为pre和cur
-*/
-// struct ListNode
-// {
-//     int val;
-//     ListNode *next;
-//     ListNode() : val(0), next(nullptr){} 
-//     ListNode(int x) : val(x), next(nullptr){} 
-//     ListNode(int x, ListNode *next) : val(x), next(next){}                                                                                                                                    *
-// };
-
-class Solution {
+class Solution
+{
 public:
-    ListNode *reverse(ListNode *pre, ListNode *cur)
+    ListNode *reverseList(ListNode *head)
     {
-        if (cur == nullptr)
-            return pre;
-        ListNode *temp = cur->next;
-        cur->next = pre;
-        return reverse(cur, temp);
-    }
-    ListNode* reverseList(ListNode* head) {
-        // //双指针
-        // ListNode *pre = nullptr;
-        // ListNode *cur = head;
-        // ListNode *temp;
-        // while (cur) {
-        //     temp = cur->next;
-        //     cur->next = pre;
-        //     pre = cur;
-        //     cur = temp;
-        // }
-        // return pre;
-        
-        //递归
-        //函数外定义一个reverse函数
-        //调用reverse，传入参数pre=null,cur=head
-        return reverse(nullptr, head);
-        
+        ListNode *pre = nullptr;
+        ListNode *cur = head;
+
+        while (cur != nullptr)
+        {
+            ListNode *tmp = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = tmp;
+        }
+        return pre;
+        cout << pre << endl;
     }
 };
-// @lc code=end
 
+int main()
+{
+    ListNode *node1 = new ListNode(1);
+    ListNode *node2 = new ListNode(2);
+    node1->next = node2;
+    node2->next = nullptr;
+    Solution::reverseList(node1);
+
+    return 0;
+}
